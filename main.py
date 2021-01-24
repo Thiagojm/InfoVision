@@ -21,6 +21,9 @@ while True:
         break
     if len(event) == 1:
         text_elem.update(value='%s - %s' % (event, ord(event)))
+        if event == "a":
+            print("deu")
+        print(event, ord(event))
     if event is not None:
         text_elem.update(event)
 
