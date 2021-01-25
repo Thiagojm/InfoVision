@@ -17,7 +17,7 @@ percent = 0.0
 ongoing = False
 
 
-layout = [[sg.Text("Nome do Usuário: "), sg.Combo(['Mony', 'Thi'], key="user_name", default_value="Mony", size=(18, 1))],
+layout = [[sg.Text("Nome do Usuário: "), sg.Listbox(values=('Mony', "Thi"), key="user_name", default_values='Mony', size=(18, 2))],
           [sg.Image(filename="src/white.png", key="image")],
           [sg.Text("Você escolheu a cor: "), sg.Text("", size=(18, 1), key='text'),
            sg.Text("Número da rodada: "), sg.Text("0", size=(18, 1), key='COUNT'),
@@ -25,8 +25,8 @@ layout = [[sg.Text("Nome do Usuário: "), sg.Combo(['Mony', 'Thi'], key="user_na
           [sg.Button("Start", key='START/STOP')],
           [sg.Button("Exit", key='EXIT')]]
 
-window = sg.Window("Keyboard Test", layout,
-                   return_keyboard_events=True, use_default_focus=False)
+window = sg.Window("InfoVision 1.0", layout,
+                   return_keyboard_events=True, use_default_focus=False, location=(300, 20))
 
 # ---===--- Loop taking in user input --- #
 while True:
@@ -42,7 +42,7 @@ while True:
         if not ongoing:
             print(values['user_name'])
             ongoing = True
-            doc_name = datetime.now().strftime(f"{values['user_name']}_%Y_%m_%d-%H_%M_%S")
+            doc_name = datetime.now().strftime(f"{values['user_name'][0]}_%Y_%m_%d-%H_%M_%S")
             act_image = random.choice(list(image_dict.keys()))
             img_element.update(image_dict[act_image])
             count = 1
@@ -62,21 +62,22 @@ while True:
             window['START/STOP'].update("Start")
             ongoing = False
     if event in events_list:
-        text_elem.update(events_dict[event])
-        if act_image == events_dict[event]:
-            hit = True
-            right_hits += 1
-        else:
-            hit = False
-        percent = round(float(right_hits * 100 / count), 2)
-        with open(f'{doc_name}.csv', 'a+') as fd:
-            fd.write(f"{count}, {act_image}, {events_dict[event]}, {hit}, {percent}\n")
-        percent = round(float(right_hits * 100/ count), 2)
-        percent_element.update(f"{right_hits} ({percent}%)")
-        count += 1
-        count_element.update(count)
-        act_image = random.choice(list(image_dict.keys()))
-        img_element.update(image_dict[act_image])
+        if ongoing:
+            text_elem.update(events_dict[event])
+            if act_image == events_dict[event]:
+                hit = True
+                right_hits += 1
+            else:
+                hit = False
+            percent = round(float(right_hits * 100 / count), 2)
+            with open(f'{doc_name}.csv', 'a+') as fd:
+                fd.write(f"{count}, {act_image}, {events_dict[event]}, {hit}, {percent}\n")
+            percent = round(float(right_hits * 100/ count), 2)
+            percent_element.update(f"{right_hits} ({percent}%)")
+            count += 1
+            count_element.update(count)
+            act_image = random.choice(list(image_dict.keys()))
+            img_element.update(image_dict[act_image])
 
 
 window.close()
