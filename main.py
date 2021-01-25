@@ -1,6 +1,7 @@
 # Internal Imports
 import random
 from datetime import datetime
+import time
 
 # External Imports
 import PySimpleGUI as sg
@@ -17,7 +18,8 @@ percent = 0.0
 ongoing = False
 
 
-layout = [[sg.Text("Nome do Usuário: "), sg.Listbox(values=('Mony', "Thi"), key="user_name", default_values='Mony', size=(18, 2))],
+layout = [[sg.Text("Nome do Usuário: "), sg.Listbox(values=('Mony', "Thi"), key="user_name", default_values='Mony', size=(18, 2)),
+           sg.Text("a = vermelho, s = amarelo, d = azul, f = verde")],
           [sg.Image(filename="src/white.png", key="image")],
           [sg.Text("Você escolheu a cor: "), sg.Text("", size=(18, 1), key='text'),
            sg.Text("Número da rodada: "), sg.Text("0", size=(18, 1), key='COUNT'),
@@ -40,10 +42,10 @@ while True:
         break
     if event == "START/STOP":
         if not ongoing:
-            print(values['user_name'])
             ongoing = True
             doc_name = datetime.now().strftime(f"{values['user_name'][0]}_%Y_%m_%d-%H_%M_%S")
             act_image = random.choice(list(image_dict.keys()))
+            time.sleep(3)
             img_element.update(image_dict[act_image])
             count = 1
             count_element.update(count)
