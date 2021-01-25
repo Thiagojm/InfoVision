@@ -1,13 +1,9 @@
 # Internal Imports
-import sys
 import random
 from datetime import datetime
 
 # External Imports
 import PySimpleGUI as sg
-
-# Recipe for getting keys, one at a time as they are released
-# If want to use the space bar, then be sure and disable the "default focus"
 
 events_list = ("a", "s", "d", "f")
 events_dict = {"a": "Vermelho", "s": "Amarelo", "d": "Azul", "f": "Verde", " ": "src/white.png"}
@@ -21,7 +17,7 @@ percent = 0.0
 ongoing = False
 
 
-layout = [[sg.Text("Press a key or scroll mouse")],
+layout = [[sg.Text("Nome do Usuário: "), sg.Combo(['Mony', 'Thi'], key="user_name", default_value="Mony", size=(18, 1))],
           [sg.Image(filename="src/white.png", key="image")],
           [sg.Text("Você escolheu a cor: "), sg.Text("", size=(18, 1), key='text'),
            sg.Text("Número da rodada: "), sg.Text("0", size=(18, 1), key='COUNT'),
@@ -44,8 +40,9 @@ while True:
         break
     if event == "START/STOP":
         if not ongoing:
+            print(values['user_name'])
             ongoing = True
-            doc_name = datetime.now().strftime("%Y_%m_%d-%H_%M_%S")
+            doc_name = datetime.now().strftime(f"{values['user_name']}_%Y_%m_%d-%H_%M_%S")
             act_image = random.choice(list(image_dict.keys()))
             img_element.update(image_dict[act_image])
             count = 1
@@ -65,34 +62,21 @@ while True:
             window['START/STOP'].update("Start")
             ongoing = False
     if event in events_list:
-        #act_image = random.choice(list(image_dict.values()))
         text_elem.update(events_dict[event])
         if act_image == events_dict[event]:
             hit = True
             right_hits += 1
         else:
             hit = False
-        #print(f"{count}, {act_image}, {events_dict[event]}")
+        percent = round(float(right_hits * 100 / count), 2)
         with open(f'{doc_name}.csv', 'a+') as fd:
-            fd.write(f"{count}, {act_image}, {events_dict[event]}, {hit}\n")
+            fd.write(f"{count}, {act_image}, {events_dict[event]}, {hit}, {percent}\n")
         percent = round(float(right_hits * 100/ count), 2)
         percent_element.update(f"{right_hits} ({percent}%)")
         count += 1
         count_element.update(count)
         act_image = random.choice(list(image_dict.keys()))
         img_element.update(image_dict[act_image])
-        #print(event, "=D")
-    # if event == "STOP":
-    #     count = 0
-    #     doc_name = None
-    #     act_image = None
-    #     hit = None
-    #     right_hits = 0
-    #     percent = 0.0
-    #     img_element.update("src/white.png")
-    #     text_elem.update(" ")
-    #     percent_element.update(f"{right_hits} ({percent}%)")
-    #     count_element.update(count)
 
 
 window.close()
