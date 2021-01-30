@@ -42,6 +42,9 @@ def trng3_random():
     else:
         return "Verde"
 
+def get_name():
+    user_name = sg.popup_get_text("Nome do Usuário")
+    return user_name
 
 def main():
     events_list = ("a", "s", "d", "f")
@@ -55,13 +58,14 @@ def main():
     right_hits = 0
     percent = 0.0
     ongoing = False
+    user_name = "Default"
     # Beep config
     frequency = 500  # Set Frequency To 1000 Hertz
     duration = 250  # Set Duration To 250 ms
 
     sg.theme('LightGreen')
 
-    layout = [[sg.Text("Nome do Usuário: "), sg.Listbox(values=('Mony', "Thi", "Outro"), key="user_name", default_values='Mony', size=(18, 2))],
+    layout = [[sg.Text("Nome do Usuário: "), sg.T('Default User', key="user_name", relief="sunken", size=(10,1)), sg.B("Change User", k="user_button")],
                [sg.Radio('Pseudo-Random', "RADIO1", default=True, k="pseudo"), sg.Radio('TrueRNG3', "RADIO1", k="trng"),sg.T("   |   "),
                 sg.Radio('Sound on', "RADIO2", default=True, k="sound_on"), sg.Radio('Sound off', "RADIO2", k="sound_off")],
                [sg.Text("Legenda: "), sg.Text("A = VERMELHO, S = AMARELO, D = AZUL, F = VERDE")],
@@ -77,6 +81,7 @@ def main():
     # ---===--- Loop taking in user input --- #
     while True:
         event, values = window.read()
+        user_name_text = window['user_name']
         text_elem = window['text']
         img_element = window["image"]
         count_element = window["COUNT"]
@@ -84,11 +89,14 @@ def main():
         if event in ("EXIT", None):
             print(event, "exiting")
             break
+        if event == "user_button":
+            user_name = get_name()
+            user_name_text.update(user_name)
         if event == "START/STOP":
             if not ongoing:
                 try:
                     ongoing = True
-                    doc_name_time = datetime.now().strftime(f"{values['user_name'][0]}_%Y_%m_%d-%H_%M_%S")
+                    doc_name_time = datetime.now().strftime(f"{user_name}_%Y_%m_%d-%H_%M_%S")
                     doc_name = save_folder + doc_name_time
                     sg.popup_no_buttons("Iniciando em 3 segundos, aguarde...", auto_close_duration=3, auto_close=True,
                                         non_blocking=True, icon=("src/images/tapa_olho.ico"))
