@@ -33,7 +33,6 @@ def trng3_random():
     ser.close()
     bin_ascii = bin(int(x.hex(), base=16))[2:].zfill(8 * blocksize) # bin to ascii
     bin_ascii_2 = bin_ascii[0:2]
-    print(bin_ascii_2)
     if bin_ascii_2 == "00":
         return "Vermelho"
     elif bin_ascii_2 == "01":
@@ -50,6 +49,7 @@ def main():
     image_dict = {"Vermelho": "src/images/red.png", "Amarelo": "src/images/yellow.png", "Azul": "src/images/blue.png", "Verde": "src/images/green.png"}
     count = 0
     doc_name = None
+    save_folder = "1- Saved Files/"
     act_image = None
     hit = None
     right_hits = 0
@@ -88,7 +88,8 @@ def main():
             if not ongoing:
                 try:
                     ongoing = True
-                    doc_name = datetime.now().strftime(f"{values['user_name'][0]}_%Y_%m_%d-%H_%M_%S")
+                    doc_name_time = datetime.now().strftime(f"{values['user_name'][0]}_%Y_%m_%d-%H_%M_%S")
+                    doc_name = save_folder + doc_name_time
                     sg.popup_no_buttons("Iniciando em 3 segundos, aguarde...", auto_close_duration=3, auto_close=True,
                                         non_blocking=True, icon=("src/images/tapa_olho.ico"))
                     time.sleep(3)
