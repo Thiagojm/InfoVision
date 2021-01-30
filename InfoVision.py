@@ -65,7 +65,7 @@ def main():
 
     sg.theme('LightGreen')
 
-    layout = [[sg.Text("Nome do Usuário: "), sg.T('Default User', key="user_name", relief="sunken", size=(10,1)), sg.B("Change User", k="user_button")],
+    layout = [[sg.Text("Nome do Usuário: "), sg.T('Default', key="user_name", relief="sunken", size=(10,1)), sg.B("Change User", k="user_button")],
                [sg.Radio('Pseudo-Random', "RADIO1", default=True, k="pseudo"), sg.Radio('TrueRNG3', "RADIO1", k="trng"),sg.T("   |   "),
                 sg.Radio('Sound on', "RADIO2", default=True, k="sound_on"), sg.Radio('Sound off', "RADIO2", k="sound_off")],
                [sg.Text("Legenda: "), sg.Text("A = VERMELHO, S = AMARELO, D = AZUL, F = VERDE")],
