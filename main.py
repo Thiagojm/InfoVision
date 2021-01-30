@@ -1,12 +1,11 @@
 # Internal Imports
-import random
+import secrets
 from datetime import datetime
 import time
 import winsound
 
 # External Imports
 import PySimpleGUI as sg
-from bitstring import BitArray
 import serial
 from serial.tools import list_ports
 
@@ -32,8 +31,7 @@ def trng3_random():
     except Exception:
         return
     ser.close()
-    bin_hex = BitArray(x)  # bin to hex
-    bin_ascii = bin_hex.bin  # hex to ASCII
+    bin_ascii = bin(int(x.hex(), base=16))[2:].zfill(8 * blocksize) # bin to ascii
     bin_ascii_2 = bin_ascii[0:2]
     print(bin_ascii_2)
     if bin_ascii_2 == "00":
@@ -63,8 +61,9 @@ def main():
 
     sg.theme('LightGreen')
 
-    layout = [[sg.Text("Nome do Usuário: "), sg.Listbox(values=('Mony', "Thi", "Outro"), key="user_name", default_values='Mony', size=(18, 2)),
-               sg.Radio('Pseudo-Random', "RADIO1", default=True, k="pseudo"), sg.Radio('TrueRNG3', "RADIO1", k="trng")],
+    layout = [[sg.Text("Nome do Usuário: "), sg.Listbox(values=('Mony', "Thi", "Outro"), key="user_name", default_values='Mony', size=(18, 2))],
+               [sg.Radio('Pseudo-Random', "RADIO1", default=True, k="pseudo"), sg.Radio('TrueRNG3', "RADIO1", k="trng"),sg.T("   |   "),
+                sg.Radio('Sound on', "RADIO2", default=True, k="sound_on"), sg.Radio('Sound off', "RADIO2", k="sound_off")],
                [sg.Text("Legenda: "), sg.Text("A = VERMELHO, S = AMARELO, D = AZUL, F = VERDE")],
               [sg.T(size=(7, 1)), sg.Image(filename="src/images/white.png", key="image")],
               [sg.Text("Você escolheu a cor: "), sg.Text("", key='text', size=(9, 1)),
@@ -94,10 +93,11 @@ def main():
                                         non_blocking=True, icon=("src/images/tapa_olho.ico"))
                     time.sleep(3)
                     if values["pseudo"]:
-                        act_image = random.choice(list(image_dict.keys()))
+                        act_image = secrets.choice(list(image_dict.keys()))
                     else:
                         act_image = trng3_random()
-                    winsound.Beep(frequency, duration)
+                    if values["sound_on"]:
+                        winsound.Beep(frequency, duration)
                     img_element.update(image_dict[act_image])
                     count = 1
                     count_element.update(count)
@@ -146,10 +146,11 @@ def main():
                     count += 1
                     count_element.update(count)
                     if values["pseudo"]:
-                        act_image = random.choice(list(image_dict.keys()))
+                        act_image = secrets.choice(list(image_dict.keys()))
                     else:
                         act_image = trng3_random()
-                    winsound.Beep(frequency, duration)
+                    if values["sound_on"]:
+                        winsound.Beep(frequency, duration)
                     img_element.update(image_dict[act_image])
             except Exception:
                 sg.popup_ok("Warning!", "Read failed! Try using Pseudo-Random mode.", icon=("src/images/tapa_olho.ico"))
