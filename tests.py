@@ -1,7 +1,3 @@
-from playsound import playsound
-import winsound
+import PySimpleGUI as sg
 
-
-azul_som = "src/sounds/azul.wav"
-# playsound(azul, block=True)
-winsound.PlaySound(azul, winsound.SND_FILENAME)
+sg.theme_previewer()

@@ -37,7 +37,7 @@ def trng3_random():
     except Exception:
         return
     ser.close()
-    bin_ascii = bin(int(x.hex(), base=16))[2:].zfill(8 * blocksize) # bin to ascii
+    bin_ascii = bin(int(x.hex(), base=16))[2:].zfill(8 * blocksize)  # bin to ascii
     bin_ascii_2 = bin_ascii[0:2]
     if bin_ascii_2 == "00":
         return "Vermelho"
@@ -48,9 +48,11 @@ def trng3_random():
     else:
         return "Verde"
 
+
 def get_name():
     user_name = sg.popup_get_text("Nome do Usuário")
     return user_name
+
 
 def play_color_sound(act_image):
     if act_image == "Vermelho":
@@ -66,10 +68,11 @@ def play_color_sound(act_image):
 
 
 def main():
-    caps_lock_list = ["A", "S", "D", "F"]
-    events_list = ["a", "s", "d", "f"]
-    events_dict = {"a": "Amarelo", "s": "Azul", "d": "Verde", "f": "Vermelho"}
-    image_dict = {"Vermelho": "src/images/red.png", "Amarelo": "src/images/yellow.png", "Azul": "src/images/blue.png", "Verde": "src/images/green.png"}
+    events_list = ["a", "s", "d", "f", "A", "S", "D", "F"]
+    events_dict = {"a": "Amarelo", "s": "Azul", "d": "Verde", "f": "Vermelho", "A": "Amarelo", "S": "Azul",
+                   "D": "Verde", "F": "Vermelho"}
+    image_dict = {"Vermelho": "src/images/red.png", "Amarelo": "src/images/yellow.png", "Azul": "src/images/blue.png",
+                  "Verde": "src/images/green.png"}
     count = 0
     doc_name = None
     save_folder = "1- Saved Files/"
@@ -82,21 +85,28 @@ def main():
     # Beep config
     frequency = 500  # Set Frequency To 1000 Hertz
     duration = 250  # Set Duration To 250 ms
+    # Font
+    text_normal = "Calibri, 14"
+    text_big = "Calibri, 16"
 
-    sg.theme('LightGreen')
+    # DarkGrey5, LightBlue6
+    sg.theme('LightBlue6')
 
-    layout = [[sg.Text("Nome do Usuário: "), sg.T('Default', key="user_name", relief="sunken", size=(10,1)), sg.B("Change User", k="user_button")],
-               [sg.Radio('Pseudo-Random', "RADIO1", default=True, k="pseudo"), sg.Radio('TrueRNG3', "RADIO1", k="trng"),sg.T("   |   "),
-                sg.Radio('Sound on', "RADIO2", default=True, k="sound_on"), sg.Radio('Sound off', "RADIO2", k="sound_off")],
-               [sg.Text("Legenda: "), sg.Text("A = AMARELO, S = AZUL, D = VERDE, F = VERMELHO")],
-              [sg.T(size=(7, 1)), sg.Image(filename="src/images/white.png", key="image")],
-              [sg.Text("Você escolheu a cor: "), sg.Text("", key='text', size=(9, 1)),
-               sg.Text("Número da rodada: "), sg.Text("0", key='COUNT', size=(3, 1)),
-               sg.Text("Acertos: "), sg.Text(f"{right_hits} ({percent}%)", key='HITS', size=(10, 1))],
-              [sg.T(size=(10, 1)), sg.Button("Start", key='START/STOP', size=(20, 1)), sg.Button("Exit", key='EXIT', size=(20, 1))]]
+    layout = [[sg.Text("Nome do Usuário: ", font=text_big), sg.T('Default', key="user_name", relief="sunken", size=(10, 1), font=text_normal),
+               sg.B("Change User", k="user_button", font=text_big)],
+              [sg.Radio('Pseudo-Random', "RADIO1", default=True, k="pseudo", font=text_normal), sg.Radio('TrueRNG3', "RADIO1", k="trng", font=text_normal),
+               sg.T("   |   "), sg.Radio('Sound on', "RADIO2", default=True, k="sound_on", font=text_normal),
+               sg.Radio('Sound off', "RADIO2", k="sound_off", font=text_normal)],
+              [sg.Text("Legenda: ", font=text_big), sg.Text("A = AMARELO, S = AZUL, D = VERDE, F = VERMELHO, ESPAÇO = OUÇA A COR", font=text_normal)],
+              [sg.T(size=(24, 1)), sg.Image(filename="src/images/white.png", key="image")],
+              [sg.Text("Você escolheu a cor: ", font=text_big), sg.Text("", key='text', size=(9, 1), font=text_normal), sg.Text("Número da rodada: ", font=text_big),
+               sg.Text("0", key='COUNT', size=(3, 1), font=text_normal), sg.Text("Acertos: ", font=text_big),
+               sg.Text(f"{right_hits} ({percent}%)", key='HITS', size=(10, 1), font=text_normal)],
+              [sg.T(size=(20, 1)), sg.Button("Start", key='START/STOP', size=(20, 1), font=text_big),
+               sg.Button("Exit", key='EXIT', size=(20, 1), font=text_big)]]
 
-    window = sg.Window("InfoVision 1.0", layout,
-                       return_keyboard_events=True, use_default_focus=False, location=(300, 20), icon=("src/images/tapa_olho.ico"))
+    window = sg.Window("InfoVision 1.0", layout, return_keyboard_events=True, use_default_focus=False,
+                       location=(300, 20), icon=("src/images/tapa_olho.ico"))
 
     # ---===--- Loop taking in user input --- #
     while True:
@@ -115,7 +125,6 @@ def main():
         if event == " ":
             if ongoing:
                 play_color_sound(act_image)
-                print(act_image)
         if event == "START/STOP":
             if not ongoing:
                 try:
@@ -136,7 +145,8 @@ def main():
                     count_element.update(count)
                     window['START/STOP'].update("Stop")
                 except Exception:
-                    sg.popup_ok("Warning!", "Read failed! Try using Pseudo-Random mode.", icon=("src/images/tapa_olho.ico"))
+                    sg.popup_ok("Warning!", "Read failed! Try using Pseudo-Random mode.",
+                                icon=("src/images/tapa_olho.ico"))
                     count = 0
                     doc_name = None
                     act_image = None
@@ -174,7 +184,7 @@ def main():
                     percent = round(float(right_hits * 100 / count), 2)
                     with open(f'{doc_name}.csv', 'a+') as fd:
                         fd.write(f"{count}, {act_image}, {events_dict[event]}, {hit}, {percent}\n")
-                    percent = round(float(right_hits * 100/ count), 2)
+                    percent = round(float(right_hits * 100 / count), 2)
                     percent_element.update(f"{right_hits} ({percent}%)")
                     count += 1
                     count_element.update(count)
@@ -199,10 +209,9 @@ def main():
                 count_element.update(count)
                 window['START/STOP'].update("Start")
                 ongoing = False
-        if event in caps_lock_list:
-            sg.popup_ok("Warning!", "Please, disable CAPSLOCK.", icon=("src/images/tapa_olho.ico"))
 
     window.close()
+
 
 if __name__ == '__main__':
     main()
