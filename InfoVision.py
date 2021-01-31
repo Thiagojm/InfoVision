@@ -3,6 +3,7 @@ import secrets
 from datetime import datetime
 import time
 import winsound
+import os
 
 # External Imports
 import PySimpleGUI as sg
@@ -67,6 +68,13 @@ def play_color_sound(act_image):
         return
 
 
+def open_folder():
+    script_path = os.getcwd()
+    path = f"{script_path}/1- Saved Files/"
+    path = os.path.realpath(path)
+    os.startfile(path)
+
+
 def main():
     events_list = ["a", "s", "d", "f", "A", "S", "D", "F"]
     events_dict = {"a": "Amarelo", "s": "Azul", "d": "Verde", "f": "Vermelho", "A": "Amarelo", "S": "Azul",
@@ -102,10 +110,10 @@ def main():
               [sg.Text("Você escolheu a cor: ", font=text_big), sg.Text("", key='text', size=(9, 1), font=text_normal), sg.Text("Número da rodada: ", font=text_big),
                sg.Text("0", key='COUNT', size=(3, 1), font=text_normal), sg.Text("Acertos: ", font=text_big),
                sg.Text(f"{right_hits} ({percent}%)", key='HITS', size=(10, 1), font=text_normal)],
-              [sg.T(size=(20, 1)), sg.Button("Start", key='START/STOP', size=(20, 1), font=text_big),
-               sg.Button("Exit", key='EXIT', size=(20, 1), font=text_big)]]
+              [sg.T(size=(2, 1)), sg.Button("Start", key='START/STOP', size=(20, 1), font=text_big),
+               sg.Button("Open Outup Folder", key='OUTPUT', size=(20, 1), font=text_big), sg.Button("Exit", key='EXIT', size=(20, 1), font=text_big)]]
 
-    window = sg.Window("InfoVision 1.0", layout, return_keyboard_events=True, use_default_focus=False,
+    window = sg.Window("InfoVision 1.0 - by Thiago Jung", layout, return_keyboard_events=True, use_default_focus=False,
                        location=(300, 20), icon=("src/images/tapa_olho.ico"))
 
     # ---===--- Loop taking in user input --- #
@@ -119,6 +127,8 @@ def main():
         if event in ("EXIT", None):
             print(event, "exiting")
             break
+        if event == "OUTPUT":
+            open_folder()
         if event == "user_button":
             user_name = get_name()
             user_name_text.update(user_name)
