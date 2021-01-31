@@ -1,15 +1,7 @@
-import PySimpleGUI as sg
+from playsound import playsound
+import winsound
 
-layout = [[sg.Text('Persistent window')],
-          [sg.Input()],
-          [sg.Button('Read'), sg.Exit()]]
 
-window = sg.Window('Window that stays open', layout)
-
-while True:
-    event, values = window.read()
-    print(event, values)
-    if event in (sg.WIN_CLOSED, 'Exit'):
-        break
-
-window.close()
+azul_som = "src/sounds/azul.wav"
+# playsound(azul, block=True)
+winsound.PlaySound(azul, winsound.SND_FILENAME)

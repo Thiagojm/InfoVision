@@ -9,6 +9,12 @@ import PySimpleGUI as sg
 import serial
 from serial.tools import list_ports
 
+# Global Variables
+azul_som = "src/sounds/azul.wav"
+amarelo_som = "src/sounds/amarelo.wav"
+vermelho_som = "src/sounds/vermelho.wav"
+verde_som = "src/sounds/verde.wav"
+
 
 def trng3_random():
     blocksize = 1
@@ -46,9 +52,23 @@ def get_name():
     user_name = sg.popup_get_text("Nome do Usuário")
     return user_name
 
+def play_color_sound(act_image):
+    if act_image == "Vermelho":
+        winsound.PlaySound(vermelho_som, winsound.SND_FILENAME)
+    elif act_image == "Amarelo":
+        winsound.PlaySound(amarelo_som, winsound.SND_FILENAME)
+    elif act_image == "Azul":
+        winsound.PlaySound(azul_som, winsound.SND_FILENAME)
+    elif act_image == "Verde":
+        winsound.PlaySound(verde_som, winsound.SND_FILENAME)
+    else:
+        return
+
+
 def main():
-    events_list = ("a", "s", "d", "f")
-    events_dict = {"a": "Vermelho", "s": "Amarelo", "d": "Azul", "f": "Verde"}
+    caps_lock_list = ["A", "S", "D", "F"]
+    events_list = ["a", "s", "d", "f"]
+    events_dict = {"a": "Amarelo", "s": "Azul", "d": "Verde", "f": "Vermelho"}
     image_dict = {"Vermelho": "src/images/red.png", "Amarelo": "src/images/yellow.png", "Azul": "src/images/blue.png", "Verde": "src/images/green.png"}
     count = 0
     doc_name = None
@@ -68,7 +88,7 @@ def main():
     layout = [[sg.Text("Nome do Usuário: "), sg.T('Default', key="user_name", relief="sunken", size=(10,1)), sg.B("Change User", k="user_button")],
                [sg.Radio('Pseudo-Random', "RADIO1", default=True, k="pseudo"), sg.Radio('TrueRNG3', "RADIO1", k="trng"),sg.T("   |   "),
                 sg.Radio('Sound on', "RADIO2", default=True, k="sound_on"), sg.Radio('Sound off', "RADIO2", k="sound_off")],
-               [sg.Text("Legenda: "), sg.Text("A = VERMELHO, S = AMARELO, D = AZUL, F = VERDE")],
+               [sg.Text("Legenda: "), sg.Text("A = AMARELO, S = AZUL, D = VERDE, F = VERMELHO")],
               [sg.T(size=(7, 1)), sg.Image(filename="src/images/white.png", key="image")],
               [sg.Text("Você escolheu a cor: "), sg.Text("", key='text', size=(9, 1)),
                sg.Text("Número da rodada: "), sg.Text("0", key='COUNT', size=(3, 1)),
@@ -92,6 +112,10 @@ def main():
         if event == "user_button":
             user_name = get_name()
             user_name_text.update(user_name)
+        if event == " ":
+            if ongoing:
+                play_color_sound(act_image)
+                print(act_image)
         if event == "START/STOP":
             if not ongoing:
                 try:
@@ -175,6 +199,8 @@ def main():
                 count_element.update(count)
                 window['START/STOP'].update("Start")
                 ongoing = False
+        if event in caps_lock_list:
+            sg.popup_ok("Warning!", "Please, disable CAPSLOCK.", icon=("src/images/tapa_olho.ico"))
 
     window.close()
 
