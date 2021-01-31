@@ -100,7 +100,7 @@ def main():
     # DarkGrey5, LightBlue6
     sg.theme('LightBlue6')
 
-    layout = [[sg.Text("Nome do Usuário: ", font=text_big), sg.T('Default', key="user_name", relief="sunken", size=(10, 1), font=text_normal),
+    layout = [[sg.Text("Nome do Usuário: ", font=text_big), sg.T('Default', key="user_name", relief="sunken", size=(23, 1), font=text_normal),
                sg.B("Change User", k="user_button", font=text_big)],
               [sg.Radio('Pseudo-Random', "RADIO1", default=True, k="pseudo", font=text_normal), sg.Radio('TrueRNG3', "RADIO1", k="trng", font=text_normal),
                sg.T("   |   "), sg.Radio('Sound on', "RADIO2", default=True, k="sound_on", font=text_normal),
@@ -110,8 +110,8 @@ def main():
               [sg.Text("Você escolheu a cor: ", font=text_big), sg.Text("", key='text', size=(9, 1), font=text_normal), sg.Text("Número da rodada: ", font=text_big),
                sg.Text("0", key='COUNT', size=(3, 1), font=text_normal), sg.Text("Acertos: ", font=text_big),
                sg.Text(f"{right_hits} ({percent}%)", key='HITS', size=(10, 1), font=text_normal)],
-              [sg.T(size=(2, 1)), sg.Button("Start", key='START/STOP', size=(20, 1), font=text_big),
-               sg.Button("Open Outup Folder", key='OUTPUT', size=(20, 1), font=text_big), sg.Button("Exit", key='EXIT', size=(20, 1), font=text_big)]]
+              [sg.T(size=(2, 1)), sg.Button("START", key='START/STOP', size=(20, 1), font=text_big),
+               sg.Button("OPEN OUTPUT FOLDER", key='OUTPUT', size=(20, 1), font=text_big), sg.Button("EXIT", key='EXIT', size=(20, 1), font=text_big)]]
 
     window = sg.Window("InfoVision 1.0 - by Thiago Jung", layout, return_keyboard_events=True, use_default_focus=False,
                        location=(300, 20), icon=("src/images/tapa_olho.ico"))
@@ -153,7 +153,7 @@ def main():
                     img_element.update(image_dict[act_image])
                     count = 1
                     count_element.update(count)
-                    window['START/STOP'].update("Stop")
+                    window['START/STOP'].update("STOP")
                 except Exception:
                     sg.popup_ok("Warning!", "Read failed! Try using Pseudo-Random mode.",
                                 icon=("src/images/tapa_olho.ico"))
@@ -167,7 +167,7 @@ def main():
                     text_elem.update(" ")
                     percent_element.update(f"{right_hits} ({percent}%)")
                     count_element.update(count)
-                    window['START/STOP'].update("Start")
+                    window['START/STOP'].update("START")
                     ongoing = False
             else:
                 count = 0
@@ -180,7 +180,7 @@ def main():
                 text_elem.update(" ")
                 percent_element.update(f"{right_hits} ({percent}%)")
                 count_element.update(count)
-                window['START/STOP'].update("Start")
+                window['START/STOP'].update("START")
                 ongoing = False
         if event in events_list:
             try:
@@ -217,7 +217,7 @@ def main():
                 text_elem.update(" ")
                 percent_element.update(f"{right_hits} ({percent}%)")
                 count_element.update(count)
-                window['START/STOP'].update("Start")
+                window['START/STOP'].update("START")
                 ongoing = False
 
     window.close()
