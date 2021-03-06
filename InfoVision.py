@@ -26,9 +26,10 @@ a = 0
 while True:
     event, values = window.read(timeout=30)
     a += 1
-    if os.path.exists("src/others/checker"):
-        os.remove("src/others/checker")
-        break
+    if a >= 60:
+        if os.path.exists("src/others/checker"):
+            os.remove("src/others/checker")
+            break
     if a == 1666:
         break
     if event == sg.WIN_CLOSED:  # always,  always give a way out!
